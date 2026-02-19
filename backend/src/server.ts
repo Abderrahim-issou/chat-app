@@ -9,5 +9,5 @@ const PORT = process.env.PORT || 8000;
 connectDB();
 
 app.listen(PORT, () => {
-  console.log(`Server running at port http://localhost:5001/api/v1 🍵`);
+  console.log(`Server running at port http://localhost:${PORT}/chat 🍵`);
 });

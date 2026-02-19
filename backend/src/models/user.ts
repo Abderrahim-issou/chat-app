@@ -6,8 +6,9 @@ interface IUser extends Document {
     fullName: string;
     email: string;
     password: string;
-    profilePic:string;
-    refreshToken: string;
+    profilePic?:string;
+    refreshToken?: string;
+    isReseting?: boolean
 }
 
 const userSchema = new Schema<IUser>({
@@ -33,6 +34,11 @@ const userSchema = new Schema<IUser>({
     refreshToken: {
         type: String,
         required: false
+    },
+    isReseting: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
