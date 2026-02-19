@@ -5,6 +5,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import loggerApp from './utils/logger';
+import authRouter from './routes/auth';
 const app = express();
 const morganFormat = ':method :url :status :response-time ms';
 
@@ -53,7 +54,7 @@ app.use(
 app.get('/', (_, res) => {
   res.send('Healthy!!!');
 });
-
+app.use('/chat/auth', authRouter)
 // Routes
 
 export default app;
