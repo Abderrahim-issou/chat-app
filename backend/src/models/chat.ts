@@ -19,11 +19,6 @@ const chatSchema = new Schema<IChat>({
         type: Schema.Types.ObjectId,
         required: true
     },
-    messages: {
-        type: [Types.ObjectId],
-        resuired: true,
-        default: []
-    },
     members:  {
         type: [Types.ObjectId],
         resuired: true,
