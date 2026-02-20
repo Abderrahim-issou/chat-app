@@ -1,6 +1,7 @@
 import { model, Schema, Types } from "mongoose";
+import ApiError from "../utils/apiError";
 
-enum chatTypeEnum {
+export enum chatTypeEnum {
     PRIVATE = 'private',
     GROUP = 'group',
 }
@@ -9,9 +10,10 @@ enum chatTypeEnum {
 
 interface IChat extends Document {
     startedBy: Types.ObjectId;
-    messages: Types.ObjectId[];
     members: Types.ObjectId[];
     chatType: chatTypeEnum;
+    groupId?: Types.ObjectId;
+    deleted?: Types.ObjectId[];
 }
 
 const chatSchema = new Schema<IChat>({
@@ -24,10 +26,30 @@ const chatSchema = new Schema<IChat>({
         resuired: true,
         default: []
     },
+    deleted:  {
+        type: [Types.ObjectId],
+        resuired: false,
+        default: []
+    },
     chatType: {
         type: String,
         enum: Object.values(chatTypeEnum),
         required: true
+    },
+    groupId: {
+        required: false,
+        type: Schema.Types.ObjectId
+    }
+});
+chatSchema.pre('validate', function (next){
+
+    const {groupId, chatType} = this;
+    if(chatType == chatTypeEnum.GROUP && !groupId ){
+        return next(
+          new ApiError(422, 'ValidationError: group id is required in group chats')
+        );
+    }else{
+        return next();
     }
 });
 

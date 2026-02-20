@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import loggerApp from './utils/logger';
 import authRouter from './routes/auth';
 import messagesRouter from './routes/messages';
+import chatRouter from './routes/chat';
 const app = express();
 const morganFormat = ':method :url :status :response-time ms';
 
@@ -56,8 +57,9 @@ app.get('/', (_, res) => {
   res.send('Healthy!!!');
 });
 
-app.use('/chat/auth', authRouter);
-app.use('/chat/messages', messagesRouter);
+app.use('/chat-app/auth', authRouter);
+app.use('/chat-app/messages', messagesRouter);
+app.use('/chat-app/chats', chatRouter);
 
 // Routes
 
