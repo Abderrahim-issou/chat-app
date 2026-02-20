@@ -3,7 +3,7 @@ import { Types } from "mongoose"
 
 interface currentUser {
     email: string,
-    id: Types.ObjectId
+    id: string
 };
 
 declare global {

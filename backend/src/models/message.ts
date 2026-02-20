@@ -3,12 +3,13 @@ import { Document, model, Schema, Types } from "mongoose";
 interface IMessage extends Document {
     receiverId: Types.ObjectId;
     senderId: Types.ObjectId;
+    chatId: Types.ObjectId;
     type: string;
     content: string;
     isSeen: boolean;
     seenAt: Date;
     isUpdated: boolean;
-    isDeleted: Types.ObjectId[];
+    deleted: Types.ObjectId[];
     replyTo: Types.ObjectId;
 }
 
@@ -18,6 +19,10 @@ const messageSchema = new Schema<IMessage>({
         required: true
     },
     senderId: {
+        type : Schema.Types.ObjectId,
+        required: true
+    },
+    chatId: {
         type : Schema.Types.ObjectId,
         required: true
     },
@@ -41,7 +46,7 @@ const messageSchema = new Schema<IMessage>({
         type: Boolean,
         required: false
     },
-    isDeleted: {
+    deleted: {
         type: [Schema.Types.ObjectId],
         required: false, 
         default: []
