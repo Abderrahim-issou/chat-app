@@ -1,7 +1,7 @@
 import { Types } from "mongoose"
 
 
-interface currentUser {
+export interface currentUser {
     email: string,
     id: string
 };
