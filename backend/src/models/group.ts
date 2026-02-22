@@ -1,4 +1,4 @@
-import { Schema, Types } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 
 
@@ -7,6 +7,9 @@ interface IGroup extends Document {
     groupName: string;
     members: Types.ObjectId[];
     createdBy: Types.ObjectId;
+    admins: Types.ObjectId[];
+    deleted: Types.ObjectId[];
+    deleteForAll: boolean;
 }
 
 const groupSchema = new Schema<IGroup>({
@@ -14,7 +17,17 @@ const groupSchema = new Schema<IGroup>({
         type: String,
         required: true
     },
+    deleteForAll: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     members: {
+        type: [Schema.Types.ObjectId],
+        required: true,
+        default: []
+    },
+    admins: {
         type: [Schema.Types.ObjectId],
         required: true,
         default: []
@@ -22,5 +35,13 @@ const groupSchema = new Schema<IGroup>({
     createdBy: {
         type: Schema.Types.ObjectId,
         required: true
+    },
+    deleted: {
+        type: [Schema.Types.ObjectId],
+        required: false, 
+        default: []
     }
 }, {timestamps: true});
+
+const Group = model('Group', groupSchema);
+export default Group;
