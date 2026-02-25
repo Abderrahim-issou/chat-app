@@ -5,7 +5,8 @@ import User from "../models/user";
 import ApiError from "../utils/apiError";
 import { confirmDto, loginDto, registerDto, resetDto } from "../validation/userSchema";
 import bcrypt from 'bcrypt';
-import { ACCESS_SECRET } from "../utils/env";
+import { ACCESS_SECRET, REFRESH_SECRET } from "../utils/env";
+import { currentUser } from "../types/express";
 
 
 
@@ -128,4 +129,35 @@ export const resetConfirm = async (data: confirmDto) => {
     user.isReseting = false;
     user.save();
     return user
+}
+
+
+export const logout = async (user_id: string) => {
+    const user = await User.findById(user_id);
+    if(!user){
+        throw new ApiError(404, 'user not found');
+    }
+    user.refreshToken = null;
+    user.save();
+    return user;
+};
+
+
+export const refresh = async (user_id: string, refresh: string) => {
+    const user = await User.findById(user_id);
+    if(!user){
+        throw new ApiError(404, 'user not found');
+    }
+    if(user.refreshToken.toString() !== refresh) {
+        throw new ApiError(402, 'Unauthorized');
+    }
+    const decode = jwt.verify(
+        refresh,
+        REFRESH_SECRET,
+    ) as currentUser;
+    if (!decode) {
+        throw new ApiError(403, 'invalid referesh Token');
+    }
+    const token = generateTokens({payload: {id: user._id, email: user.email}, expirationTime: '15min', type: 'Access'});
+    return token;
 }
