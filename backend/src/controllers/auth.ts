@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/apiError";
-import { login, register, resetConfirm, resetPasswod } from "../services/auth";
+import { login, logout, refresh, register, resetConfirm, resetPasswod } from "../services/auth";
 import { confirmDto, loginDto, registerDto, resetDto } from "../validation/userSchema";
 import ApiResponse from "../utils/apiResponse";
 
@@ -73,5 +73,42 @@ export const confirmResetHandler = asyncHandler( async (req: Request, res: Respo
 
     res.status(201).json(
         new ApiResponse(201, {}, 'password reseted')
+    );
+});
+
+export const logoutHandler = asyncHandler( async (req: Request, res: Response) => {
+    const token: string = req.cookies.jwt;
+    if (!token || !token.startsWith('Bearer ')){
+        throw new ApiError(403, 'you are not authorized');
+    }
+    const user_id = req.currUser.id;
+    const user = await logout(user_id);
+    if(!user){
+        throw new ApiError(40, 'logout failed');    
+    }
+    res.clearCookie(
+        'jwt', 
+        {
+            secure: true, 
+            sameSite: 'none',
+            maxAge: 7 * 60 * 60 * 1000 ,
+            httpOnly: true
+        }
+    );
+    res.status(200).json(
+        new ApiResponse(200, {}, 'user logged out')
+    );
+});
+
+export const refereshHandler = asyncHandler( async (req: Request, res: Response) => {
+    const user_id = req.currUser.id;
+    const cookie: string = req.cookies.jwt;
+    if (!cookie || !cookie.startsWith('Bearer ')){
+        throw new ApiError(403, 'you are not authorized');
+    }
+    const refToken = cookie.split(' ')[1];
+    const token = await refresh(user_id, refToken);
+    res.status(200).json(
+        new ApiResponse(200, {token}, 'new access token generated')
     );
 });
