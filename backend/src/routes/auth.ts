@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { confirmResetHandler, loginHandler, registerHandler, resetPasswodHnadler } from "../controllers/auth";
+import { confirmResetHandler, loginHandler, logoutHandler, refereshHandler, registerHandler, resetPasswodHnadler } from "../controllers/auth";
 
 
 
@@ -10,6 +10,17 @@ router.post(
     '/login',
     loginHandler
 );
+
+router.post(
+    '/logout',
+    logoutHandler
+);
+
+router.post(
+    '/refresh',
+    refereshHandler
+);
+
 
 router.post(
     '/register',
