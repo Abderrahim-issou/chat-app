@@ -3,7 +3,7 @@ import { model, Schema, Types } from "mongoose";
 
 
 
-interface IGroup extends Document {
+export interface IGroup extends Document {
     groupName: string;
     members: Types.ObjectId[];
     createdBy: Types.ObjectId;

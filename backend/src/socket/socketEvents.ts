@@ -1,3 +1,5 @@
+import { IMessage } from "../models/message";
+import { createMessage } from "../services/messages";
 import { currentUser } from "../types/express";
 import { getSocketInstance } from "./socket";
 
@@ -11,7 +13,6 @@ const onlineUsers = new Map<string, Set<string>>();
 Io.on('connection', (socket) => {
     const user: currentUser = socket.data.user;
     console.log('User connected :', socket.id);
-    
 
     //check if the user is already connected: 
     if(!onlineUsers.has(`user:${user.id}`)){
@@ -49,40 +50,29 @@ Io.on('connection', (socket) => {
 
 
     //send message 
-    socket.on('send-Msg', (msg) => {
+    socket.on('send-Msg', async (msg: IMessage) => {
+        // save the message to the db 
+        const message = await createMessage(msg, msg.senderId.toString());
 
+        //emit the message to the receiver
+        Io.to(`user:${msg.receiverId}`).emit('receive-msg');
     });
 
-    //receive Message 
-    socket.on('receive-Msg', (msg) => {
-
-    });
 
     //typing effect
-    socket.on('typing', () => {
-        
+    socket.on('typing', (user) => {
+        socket.to(`user:${user.id}`).to('is-typing');
     });
 
-
-
-
-
-
-
-    // handle diconenctions
-    socket.on('diconnect', (reason) => {
-        console.log('disconnete :', reason);
-        const userId = socket.data.user.id
-        if (!userId) return;
-        const userSockets = onlineUsers.get(`user:${user.id}`);
-        if(userSockets) return;
+    socket.on('notification', (not) => {
+        socket.to(`user:${user.id}`).to('receive-notification');
+    });
+    
+    socket.on('join-chat', (not) => {
+        socket.to(`user:${user.id}`).to('receive-notification');
     });
 
-
-
-
-
-    socket.on('disconnec', () => {
+    socket.on('disconnect', () => {
         console.log('User disconnected :', socket.id);
     });
 
