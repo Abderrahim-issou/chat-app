@@ -3,7 +3,6 @@ import { ZodSchema } from 'zod';
 
 const validateRequest = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
   const result = schema.safeParse(req.body);
-
   if (!result.success) {
     res.status(400).json({
       errors: result.error.errors.map((err) => ({
@@ -13,7 +12,7 @@ const validateRequest = (schema: ZodSchema<any>) => (req: Request, res: Response
     });
   }
 
-  req.body = result.data;
+  req.body.data = result.data;
   next();
 };
 
