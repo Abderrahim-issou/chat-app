@@ -9,6 +9,7 @@ import authRouter from './routes/auth';
 import messagesRouter from './routes/messages';
 import chatRouter from './routes/chat';
 import groupRouter from './routes/group';
+import notificationRouter from './routes/notification';
 const app = express();
 const morganFormat = ':method :url :status :response-time ms';
 
@@ -62,6 +63,7 @@ app.use('/chat-app/auth', authRouter);
 app.use('/chat-app/messages', messagesRouter);
 app.use('/chat-app/chats', chatRouter);
 app.use('/chat-app/groups', groupRouter);
+app.use('/chat-app/notifications', notificationRouter);
 
 // Routes
 

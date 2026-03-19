@@ -1,5 +1,5 @@
 import Chat from "../models/chat";
-import Message from "../models/message";
+import Message, { IMessage } from "../models/message";
 import ApiError from "../utils/apiError";
 import { createMDto, updateMDto } from "../validation/messageSchema";
 
@@ -7,7 +7,7 @@ import { createMDto, updateMDto } from "../validation/messageSchema";
 
 
 
-export const createMessage = async (data: createMDto, user_id: string) => {
+export const createMessage = async (data: createMDto | IMessage, user_id: string) => {
     const { content, receiverId, type } = data;
 
     if(!content || !receiverId || !type){

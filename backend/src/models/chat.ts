@@ -8,7 +8,7 @@ export enum chatTypeEnum {
 
 
 
-interface IChat extends Document {
+export interface IChat extends Document {
     startedBy: Types.ObjectId;
     members: Types.ObjectId[];
     chatType: chatTypeEnum;

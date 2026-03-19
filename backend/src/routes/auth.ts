@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { confirmResetHandler, loginHandler, registerHandler, resetPasswodHnadler } from "../controllers/auth";
 import { loginSchema, registerSchema } from "../validation/userSchema";
 import validateRequest from "../middlewares/validateRequest";
+import { confirmResetHandler, loginHandler, logoutHandler, refereshHandler, registerHandler, resetPasswodHnadler } from "../controllers/auth";
 
 
 
@@ -13,6 +13,17 @@ router.post(
     validateRequest(loginSchema),
     loginHandler
 );
+
+router.post(
+    '/logout',
+    logoutHandler
+);
+
+router.post(
+    '/refresh',
+    refereshHandler
+);
+
 
 router.post(
     '/register',
