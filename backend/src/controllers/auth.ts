@@ -31,7 +31,6 @@ export const loginHandler = asyncHandler( async (req: Request, res: Response) =>
 
 export const registerHandler = asyncHandler( async (req: Request, res: Response) => {
     const data: registerDto = req.body.data;
-    
     const { refresh, access } = await register(data);
 
     res.cookie(
