@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { loginSchema, registerSchema } from "../validation/userSchema";
+import validateRequest from "../middlewares/validateRequest";
 import { confirmResetHandler, loginHandler, logoutHandler, refereshHandler, registerHandler, resetPasswodHnadler } from "../controllers/auth";
 
 
@@ -8,6 +10,7 @@ const router = Router();
 
 router.post(
     '/login',
+    validateRequest(loginSchema),
     loginHandler
 );
 
@@ -24,6 +27,7 @@ router.post(
 
 router.post(
     '/register',
+    validateRequest(registerSchema),
     registerHandler
 );
 

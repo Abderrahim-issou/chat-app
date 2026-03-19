@@ -22,7 +22,7 @@ export const setSocketInstance = (socketInstance: Server) => {
     Io = socketInstance;
     return Io;
 }
-
+// redux-setUp/feature
 export const getSocketInstance = () => {
     if(!Io){
         throw new ApiError(500, 'socket is not available')
